@@ -14,35 +14,41 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(uuid())
-  cpf      String   @unique
+  id       String @id @default(uuid())
+  cpf      String @unique
   password String
   role     Role
 
   parcel Parcel[]
 }
-enum Role{
+
+enum Role {
   ADMIN
-  DELIVERYMAN 
+  DELIVERYMAN
 }
+
 model Parcel {
-  id             String  @id @default(uuid())
-  cep            Int
-  status         String
-  rackingCode    String
-  typeDelivery   String
-  responsibleId  String
-  responsible    User?   @relation(fields: [responsibleId], references: [id])
+  id            String @id @default(uuid())
+  cep           Int
+  status        String
+  rackingCode   String
+  typeDelivery  String
+  responsibleId String
+  responsible   User?  @relation(fields: [responsibleId], references: [id])
 }
 
 model Recipient {
-  id   String @id @default(uuid())
-  name String
+  id       String @id @default(uuid())
+  name     String
+  cep      String
+  adderess String
+  pohne    String
+  email    String       @unique
 }
 
 model Deliveryman {
-  id        Int      @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   name      String
-  phone     String 
-  available Boolean  @default(true)
+  phone     String
+  available Boolean @default(true)
 }
