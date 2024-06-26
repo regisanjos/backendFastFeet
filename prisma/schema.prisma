@@ -9,6 +9,40 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String   @id @default(uuid())
+  cpf      String   @unique
+  password String
+  role     Role
+
+  parcel Parcel[]
+}
+enum Role{
+  ADMIN
+  DELIVERYMAN 
+}
+model Parcel {
+  id             String  @id @default(uuid())
+  cep            Int
+  status         String
+  rackingCode    String
+  typeDelivery   String
+  responsibleId  String
+  responsible    User?   @relation(fields: [responsibleId], references: [id])
+}
+
+model Recipient {
+  id   String @id @default(uuid())
+  name String
+}
+
+model Deliveryman {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String 
+  available Boolean  @default(true)
 }
