@@ -1,4 +1,4 @@
-const parcelDAO = require('../DAO/parcelDAO');
+const ParcelDAO = require('../DAO/ParcelDAO');
 const notificationService = require('./notificationService');
 
 // Create Parcel
