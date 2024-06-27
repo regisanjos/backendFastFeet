@@ -1,64 +1,49 @@
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 
-// Create Recipient
+
 const createRecipient = async (recipientData) => {
-  const recipient = await prisma.recipient.create({
-    data: {
-      name: recipientData.name,
-      address: recipientData.address,
-      phone: recipientData.phone,
-      email: recipientData.email
-    },
-  });
-  return recipient;
+    return await prisma.recipient.create({
+        data,
+    });
+
 };
 
-// Get All Recipients
+
 const getRecipients = async () => {
-  const recipients = await prisma.recipient.findMany();
-  return recipients;
+    return await prisma.recipient.findMany();
+
 };
 
-// Get Recipient by ID
+
 const getRecipientById = async (id) => {
-  const recipient = await prisma.recipient.findUnique({
-    where: { id },
-  });
+    return await prisma.recipient.findUnique({
+        where: { id },
+    });
 
-  if (!recipient) {
-    throw new Error('Recipient not found');
-  }
 
-  return recipient;
 };
 
-// Update Recipient
+
 const updateRecipient = async (id, recipientData) => {
-  const recipient = await prisma.recipient.update({
-    where: { id },
-    data: {
-      name: recipientData.name,
-      address: recipientData.address,
-      phone: recipientData.phone,
-      email: recipientData.email
-    },
-  });
+    const recipient = await prisma.recipient.update({
+        where: { id },
+        data,
+        
+    });
 
-  return recipient;
-};
+    };
 
-// Delete Recipient
+
 const deleteRecipient = async (id) => {
-  await prisma.recipient.delete({
-    where: { id },
-  });
+    return await prisma.recipient.delete({
+        where: { id },
+    });
 };
 
 module.exports = {
-  createRecipient,
-  getRecipients,
-  getRecipientById,
-  updateRecipient,
-  deleteRecipient,
+    createRecipient,
+    getRecipients,
+    getRecipientById,
+    updateRecipient,
+    deleteRecipient,
 };
