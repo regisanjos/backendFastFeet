@@ -1,44 +1,70 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const { prisma } = require('../prismaClient');
 
-// Create Parcel
-const createParcel = async (parcelData) => {
+const createParcel = async (data) => {
   return await prisma.parcel.create({
-    data: parcelData,
+    data,
   });
 };
 
-// Get All Parcels
-const getParcels = async () => {
+const getAllParcels = async () => {
   return await prisma.parcel.findMany();
 };
 
-// Get Parcel by ID
 const getParcelById = async (id) => {
   return await prisma.parcel.findUnique({
     where: { id },
   });
 };
 
-// Update Parcel
-const updateParcel = async (id, updateData) => {
+const updateParcel = async (id, data) => {
   return await prisma.parcel.update({
     where: { id },
-    data: updateData,
+    data,
   });
 };
 
-// Delete Parcel
 const deleteParcel = async (id) => {
   return await prisma.parcel.delete({
     where: { id },
   });
 };
 
+const markParcelAsWaiting = async (id) => {
+  return await prisma.parcel.update({
+    where: { id },
+    data: { status: 'WAITING' },
+  });
+};
+
+const withdrawParcel = async (id, userId) => {
+  return await prisma.parcel.update({
+    where: { id },
+    data: { status: 'WITHDRAWN', responsibleId: userId },
+  });
+};
+
+const markParcelAsDelivered = async (id, userId, photo) => {
+  return await prisma.parcel.update({
+    where: { id, responsibleId: userId },
+    data: { status: 'DELIVERED', photo },
+  });
+};
+
+const markParcelAsReturned = async (id, userId) => {
+  return await prisma.parcel.update({
+    where: { id, responsibleId: userId },
+    data: { status: 'RETURNED' },
+  });
+};
+
 module.exports = {
   createParcel,
-  getParcels,
+  getAllParcels,
   getParcelById,
   updateParcel,
   deleteParcel,
+  markParcelAsWaiting,
+  withdrawParcel,
+  markParcelAsDelivered,
+  markParcelAsReturned,
 };
