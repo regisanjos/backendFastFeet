@@ -1,16 +1,8 @@
-const {
-  createParcel,
-  getParcels,
-  getParcelById,
-  updateParcel,
-  deleteParcel,
-  markParcelAsWaiting,
-  markParcelAsDelivered,
-  markParcelAsReturned,
-  withdrawParcel,
-} = require('../BLL/parcelBLL');
 const { getParcelsNearby } = require('../Bll/ParcelsBLL');
 const { getParcelsByUser } = require('../Bll/ParceslBLL');
+
+const { createParcel, getParcels, getParcelById, updateParcel, deleteParcel, markParcelAsWaiting, markParcelAsDelivered, markParcelAsReturned, withdrawParcel} = require('../BLL/parcelBLL');
+
 const create = async (req, res) => {
 
   const parcel = await createParcel(req.body);

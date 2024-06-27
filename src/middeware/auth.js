@@ -1,11 +1,15 @@
 const jwt = require('jsonwebtoken');
 
 const isAuthenticated = (req, res, next) => {
-  const token = req.headers['authorization'];
-  if (!token) return res.status(401).json({ message: 'Token não fornecido' });
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
 
-  jwt.verify(token, 'your-secret-key', (err, decoded) => {
-    if (err) return res.status(401).json({ message: 'Token inválido' });
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: 'Failed to authenticate token' });
+    }
 
     req.user = decoded;
     next();
@@ -13,13 +17,10 @@ const isAuthenticated = (req, res, next) => {
 };
 
 const isAdmin = (req, res, next) => {
-  if (req.user.role !== 'ADMIN') {
-    return res.status(403).json({ message: 'Acesso negado' });
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Forbidden: Admins only' });
   }
   next();
 };
 
-module.exports = {
-  isAuthenticated,
-  isAdmin,
-};
+module.exports = { isAuthenticated, isAdmin };

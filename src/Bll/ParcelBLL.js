@@ -1,3 +1,4 @@
+const { prisma } = require( '../prismaClient')
 const { sendNotification } = require('../services/notificationService');
 
 const {
@@ -11,10 +12,13 @@ const {
   markParcelAsReturned,
   withdrawParcel,
 } = require('../DAO/parcelDao');
-const { Prisma } = require('@prisma/client');
+
 
 const createParcel = async (data) => {
-  return await createParcel(data);
+  const parcel = await prisma.parcel.create({ data });
+  const recipient = await prisma.recipient.findUnique({ where: { id: parcel.recipientId } });
+  await sendNotification(recipient.email, 'Parcel Created', 'A new parcel has been created.');
+  return parcel;
 };
 
 const getParcels = async () => {
@@ -34,28 +38,28 @@ const deleteParcel = async (id) => {
 };
 
 const markParcelAsWaiting = async (id) => {
-  const parcel = await markParcelAsWaiting(id);
-  const recipient = await prisma.recipient.findUnique({where:{ id: parcel.recipientId}});
+  const parcel = await updateParcel(id, { status: 'WAITING' });
+  const recipient = await prisma.recipient.findUnique({ where: { id: parcel.recipientId } });
   await sendNotification(recipient.email, 'Parcel Waiting', 'Your parcel is available for withdrawal.');
   return parcel;
 };
 
 const withdrawParcel = async (id, userId) => {
-  const parcel = await withdrawParcel(id, userId);
+  const parcel = await updateParcel(id, { status: 'WITHDRAWN', responsibleId: userId });
   const recipient = await prisma.recipient.findUnique({ where: { id: parcel.recipientId } });
   await sendNotification(recipient.email, 'Parcel Withdrawn', 'Your parcel has been withdrawn.');
   return parcel;
 };
 
 const markParcelAsDelivered = async (id, userId, photo) => {
-  const parcel = await markParcelAsDelivered(id, userId, photo);
+  const parcel = await updateParcel(id, { status: 'DELIVERED', responsibleId: userId, photoUrl: photoUrl });
   const recipient = await prisma.recipient.findUnique({ where: { id: parcel.recipientId } });
   await sendNotification(recipient.email, 'Parcel Delivered', 'Your parcel has been delivered.');
-  return parcel;
+  return parcel
 };
 
 const markParcelAsReturned = async (id, userId) => {
-  const parcel = await markParcelAsReturned(id, userId);
+   const parcel = await updateParcel(id, { status: 'RETURNED', responsibleId: userId });
   const recipient = await prisma.recipient.findUnique({ where: { id: parcel.recipientId } });
   await sendNotification(recipient.email, 'Parcel Returned', 'Your parcel has been returned.');
   return parcel;

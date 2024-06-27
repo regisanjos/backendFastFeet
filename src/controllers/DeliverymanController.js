@@ -1,10 +1,4 @@
-const {
-  createDeliveryman,
-  getDeliverymen,
-  getDeliverymanById,
-  updateDeliveryman,
-  deleteDeliveryman,
-} = require('../BLL/deliverymanBLL');
+const { createDeliveryman, getDeliverymen, getDeliverymanById, updateDeliveryman, deleteDeliveryman} = require('../BLL/deliverymanBLL');
 
 const create = async (req, res) => {
   const deliveryman = await createDeliveryman(req.body);

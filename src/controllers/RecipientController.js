@@ -1,10 +1,4 @@
-const {
-  createRecipient,
-  getRecipients,
-  getRecipientById,
-  updateRecipient,
-  deleteRecipient,
-} = require('../BLL/recipientBLL');
+const { createRecipient, getRecipients, getRecipientById, updateRecipient, deleteRecipient,} = require('../BLL/recipientBLL');
 
 const create = async (req, res) => {
   const recipient = await createRecipient(req.body);

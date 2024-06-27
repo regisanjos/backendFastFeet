@@ -1,11 +1,5 @@
 const { changePassword } = require('../BLL/userBLL');
-const {
-  createUser,
-  getUsers,
-  getUserById,
-  updateUser,
-  deleteUser,
-} = require('../BLL/userBLL');
+const { createUser,  getUsers,  getUserById,  updateUser,  deleteUser,} = require('../BLL/userBLL');
 
 const create = async (req, res) => {
   const user = await createUser(req.body);
