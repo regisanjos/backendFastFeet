@@ -1,3 +1,4 @@
+const { prisma } = require( '../prismaClient');
 const express = require('express');
 const router = express.Router();
 const { create, getAll, getById, update, remove, markAsWaiting, markAsDelivered, markAsReturned, withdrawParcel, ListNearby, listByUser } = require('../controllers/ParcelController');

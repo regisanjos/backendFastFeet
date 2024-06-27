@@ -1,3 +1,4 @@
+const { prisma } = require( '../prismaClient');
 const sendNotification = async (recipienteEmail, subject, message) => {
 
     //logica

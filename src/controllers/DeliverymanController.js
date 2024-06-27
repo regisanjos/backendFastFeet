@@ -1,3 +1,4 @@
+const { prisma } = require( '../prismaClient');
 const { createDeliveryman, getDeliverymen, getDeliverymanById, updateDeliveryman, deleteDeliveryman} = require('../BLL/deliverymanBLL');
 
 const create = async (req, res) => {

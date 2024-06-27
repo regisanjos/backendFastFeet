@@ -1,3 +1,4 @@
+const { prisma } = require( '../prismaClient');
 const { updateUserPassword} = require ('../DAO/UserDAO')
 const { update } = require('../controllers/ParcelController');
 const { prisma } = require('../prismaClient');

@@ -1,3 +1,4 @@
+const { prisma } = require( '../prismaClient');
 const { changePassword } = require('../BLL/userBLL');
 const { createUser,  getUsers,  getUserById,  updateUser,  deleteUser,} = require('../BLL/userBLL');
 

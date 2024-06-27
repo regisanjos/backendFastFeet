@@ -1,4 +1,4 @@
-const { prisma } = require( '../prismaClient')
+const { prisma } = require( '../prismaClient');
 const { sendNotification } = require('../services/notificationService');
 
 const {

@@ -1,3 +1,4 @@
+const { prisma } = require( '../prismaClient');
 const express = require('express');
 const bodyParser = require('body-parser');
 const router = require('./router');

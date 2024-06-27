@@ -1,3 +1,4 @@
+const { prisma } = require( '../prismaClient');
 const { authenticateUser } = require('../BLL/userBLL');
 
 const login = async (req, res) => {

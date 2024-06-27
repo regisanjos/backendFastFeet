@@ -1,3 +1,4 @@
+const { prisma } = require( '../prismaClient');
 const { createRecipient, getRecipients, getRecipientById, updateRecipient, deleteRecipient,} = require('../BLL/recipientBLL');
 
 const create = async (req, res) => {

@@ -1,3 +1,4 @@
+const prismaClient = require('../prismaClient');
 const { getParcelsNearby } = require('../Bll/ParcelsBLL');
 const { getParcelsByUser } = require('../Bll/ParceslBLL');
 
