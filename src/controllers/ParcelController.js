@@ -1,66 +1,76 @@
-const express = require('express');
-const router = express.Router();
-const parcelService = require('../BLL/parcelService');
-const { authenticateToken, authorizeRole } = require('../middleware/auth');
+const {
+  createParcel,
+  getParcels,
+  getParcelById,
+  updateParcel,
+  deleteParcel,
+  markParcelAsWaiting,
+  markParcelAsDelivered,
+  markParcelAsReturned,
+  withdrawParcel,
+} = require('../BLL/parcelBLL');
 
-// Create Parcel
-router.post('/', authenticateToken, authorizeRole('ADMIN'), async (req, res) => {
-  try {
-    const parcel = await parcelService.createParcel(req.body);
-    res.status(201).json(parcel);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+const create = async (req, res) => {
+  const parcel = await createParcel(req.body);
+  res.status(201).json(parcel);
+};
+
+const getAll = async (req, res) => {
+  const parcels = await getParcels();
+  res.json(parcels);
+};
+
+const getById = async (req, res) => {
+  const parcel = await getParcelById(req.params.id);
+  if (parcel) {
+    res.json(parcel);
+  } else {
+    res.status(404).json({ message: 'Parcel not found' });
   }
-});
+};
 
-// Get Parcels
-router.get('/', authenticateToken, async (req, res) => {
-  try {
-    const parcels = await parcelService.getParcels();
-    res.status(200).json(parcels);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+const update = async (req, res) => {
+  const parcel = await updateParcel(req.params.id, req.body);
+  res.json(parcel);
+};
+
+const remove = async (req, res) => {
+  await deleteParcel(req.params.id);
+  res.status(204).send();
+};
+
+const markAsWaiting = async (req, res) => {
+  const parcel = await markParcelAsWaiting(req.params.id);
+  res.json(parcel);
+};
+
+const withdrawParcel = async (req, res) => {
+  const parcel = await withdrawParcel(req.params.id, req.user.id);
+  res.json(parcel);
+};
+
+const markAsDelivered = async (req, res) => {
+  const { photo } = req.body;
+  if (!photo) {
+    return res.status(400).json({ message: 'Photo is required to mark as delivered' });
   }
-});
+  const parcel = await markParcelAsDelivered(req.params.id, req.user.id, photo);
+  res.json(parcel);
+};
 
-// Update Parcel Status
-router.patch('/:id/status', authenticateToken, authorizeRole('ADMIN'), async (req, res) => {
-  try {
-    const parcel = await parcelService.updateParcelStatus(req.params.id, req.body.status);
-    res.status(200).json(parcel);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
+const markAsReturned = async (req, res) => {
+  const parcel = await markParcelAsReturned(req.params.id, req.user.id);
+  res.json(parcel);
+};
 
-// Withdraw Parcel
-router.patch('/:id/withdraw', authenticateToken, authorizeRole('DELIVERYMAN'), async (req, res) => {
-  try {
-    const parcel = await parcelService.withdrawParcel(req.params.id, req.user.id);
-    res.status(200).json(parcel);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-// Deliver Parcel
-router.patch('/:id/deliver', authenticateToken, authorizeRole('DELIVERYMAN'), async (req, res) => {
-  try {
-    const parcel = await parcelService.deliverParcel(req.params.id, req.body.photoUrl);
-    res.status(200).json(parcel);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-// Return Parcel
-router.patch('/:id/return', authenticateToken, authorizeRole('ADMIN'), async (req, res) => {
-  try {
-    const parcel = await parcelService.returnParcel(req.params.id);
-    res.status(200).json(parcel);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-module.exports = router;
+module.exports = {
+  create,
+  getAll,
+  getById,
+  update,
+  remove,
+  markAsWaiting,
+  withdrawParcel,
+  markAsDelivered,
+  markAsReturned,
+};
