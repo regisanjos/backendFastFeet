@@ -12,3 +12,8 @@ router.put('/:id', isAdmin, update);
 router.delete('/:id', isAdmin, remove);
 
 router.put('/:id/waiting', isAdmin, markAsWaiting);
+router.put('/:id/withdraw', isDeliveryman, withdrawParcel);
+router.put('/:id/delivered', isDeliveryman, markAsDelivered);
+router.put('/:id/returned', isDeliveryman, markAsReturned);
+
+module.exports = router;

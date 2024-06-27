@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 
 
-const createRecipient = async (recipientData) => {
+const createRecipient = async (data) => {
     return await prisma.recipient.create({
         data,
     });
@@ -24,7 +24,7 @@ const getRecipientById = async (id) => {
 };
 
 
-const updateRecipient = async (id, recipientData) => {
+const updateRecipient = async (id, data) => {
     const recipient = await prisma.recipient.update({
         where: { id },
         data,
