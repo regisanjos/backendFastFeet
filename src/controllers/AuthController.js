@@ -1,36 +1,38 @@
-const express = require('express');
-const router = express.Router();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const { prisma } = require('../prismaClient');
 
-const authenticateUser = async (cpf, password) => {
-  const user = await prisma.user.findUnique({
-    where: { cpf },
+const createDeliveryman = async (data) => {
+  return await prisma.deliveryman.create({
+    data,
   });
-
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    throw new Error('Invalid CPF or password');
-  }
-
-  const token = jwt.sign(
-    { userId: user.id, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: '1h' }
-  );
-
-  return { token, user };
 };
 
-router.post('/login', async (req, res) => {
-  try {
-    const { cpf, password } = req.body;
-    const { token, user } = await authenticateUser(cpf, password);
-    res.status(200).json({ token, user });
-  } catch (error) {
-    res.status(401).json({ error: error.message });
-  }
-});
+const getAllDeliverymen = async () => {
+  return await prisma.deliveryman.findMany();
+};
 
-module.exports = router;
+const getDeliverymanById = async (id) => {
+  return await prisma.deliveryman.findUnique({
+    where: { id },
+  });
+};
+
+const updateDeliveryman = async (id, data) => {
+  return await prisma.deliveryman.update({
+    where: { id },
+    data,
+  });
+};
+
+const deleteDeliveryman = async (id) => {
+  return await prisma.deliveryman.delete({
+    where: { id },
+  });
+};
+
+module.exports = {
+  createDeliveryman,
+  getAllDeliverymen,
+  getDeliverymanById,
+  updateDeliveryman,
+  deleteDeliveryman,
+};
