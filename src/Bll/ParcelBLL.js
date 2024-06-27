@@ -1,60 +1,59 @@
-const ParcelDAO = require('../DAO/ParcelDAO');
-const notificationService = require('./notificationService');
+const {
+  createParcel,
+  getAllParcels,
+  getParcelById,
+  updateParcel,
+  deleteParcel,
+  markParcelAsWaiting,
+  markParcelAsDelivered,
+  markParcelAsReturned,
+  withdrawParcel,
+} = require('../DAO/parcelDao');
 
-// Create Parcel
-const createParcel = async (parcelData) => {
-  const parcel = await parcelDAO.createParcel({
-    ...parcelData,
-    status: 'awaiting',
-  });
-  await notificationService.sendNotification(parcelData.recipientId, `Your parcel with tracking code ${parcel.trackingCode} has been created and is awaiting pickup.`);
-  return parcel;
+const createParcel = async (data) => {
+  return await createParcel(data);
 };
 
-// Get All Parcels
 const getParcels = async () => {
-  return await parcelDAO.getParcels();
+  return await getAllParcels();
 };
 
-// Update Parcel Status
-const updateParcelStatus = async (id, status) => {
-  const parcel = await parcelDAO.updateParcel(id, { status });
-  await notificationService.sendNotification(parcel.responsibleId, `Your parcel with tracking code ${parcel.trackingCode} status has been updated to ${status}.`);
-  return parcel;
+const getParcelById = async (id) => {
+  return await getParcelById(id);
 };
 
-// Withdraw Parcel
-const withdrawParcel = async (id, deliverymanId) => {
-  const parcel = await parcelDAO.updateParcel(id, {
-    status: 'withdrawn',
-    responsibleId: deliverymanId,
-  });
-  await notificationService.sendNotification(parcel.responsibleId, `Your parcel with tracking code ${parcel.trackingCode} has been withdrawn by the deliveryman.`);
-  return parcel;
+const updateParcel = async (id, data) => {
+  return await updateParcel(id, data);
 };
 
-// Deliver Parcel
-const deliverParcel = async (id, photoUrl) => {
-  const parcel = await parcelDAO.updateParcel(id, {
-    status: 'delivered',
-    photoUrl,
-  });
-  await notificationService.sendNotification(parcel.responsibleId, `Your parcel with tracking code ${parcel.trackingCode} has been delivered.`);
-  return parcel;
+const deleteParcel = async (id) => {
+  return await deleteParcel(id);
 };
 
-// Return Parcel
-const returnParcel = async (id) => {
-  const parcel = await parcelDAO.updateParcel(id, { status: 'returned' });
-  await notificationService.sendNotification(parcel.responsibleId, `Your parcel with tracking code ${parcel.trackingCode} has been returned.`);
-  return parcel;
+const markParcelAsWaiting = async (id) => {
+  return await markParcelAsWaiting(id);
+};
+
+const withdrawParcel = async (id, userId) => {
+  return await withdrawParcel(id, userId);
+};
+
+const markParcelAsDelivered = async (id, userId, photo) => {
+  return await markParcelAsDelivered(id, userId, photo);
+};
+
+const markParcelAsReturned = async (id, userId) => {
+  return await markParcelAsReturned(id, userId);
 };
 
 module.exports = {
   createParcel,
   getParcels,
-  updateParcelStatus,
+  getParcelById,
+  updateParcel,
+  deleteParcel,
+  markParcelAsWaiting,
   withdrawParcel,
-  deliverParcel,
-  returnParcel,
+  markParcelAsDelivered,
+  markParcelAsReturned,
 };
