@@ -1,49 +1,56 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const { prisma } = require('../prismaClient');
+const bcrypt = require('bcryptjs');
 
-// Create User
-const createUser = async (userData) => {
-  const hashedPassword = await bcrypt.hash(userData.password, 10);
-  const user = await prisma.user.create({
-    data: {
-      cpf: userData.cpf,
-      password: hashedPassword,
-    },
+const createUser = async (data) => {
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+  data.password = hashedPassword;
+  return await prisma.user.create({
+    data,
   });
-  return user;
 };
 
-// Login
-const login = async (userData) => {
-  const user = await prisma.user.findUnique({
-    where: { cpf: userData.cpf },
-  });
+const getUsers = async () => {
+  return await prisma.user.findMany();
+};
 
-  if (!user || !(await bcrypt.compare(userData.password, user.password))) {
-    throw new Error('Invalid CPF or password');
+const getUserById = async (id) => {
+  return await prisma.user.findUnique({
+    where: { id },
+  });
+};
+
+const updateUser = async (id, data) => {
+  if (data.password) {
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+    data.password = hashedPassword;
   }
-
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: '1h',
+  return await prisma.user.update({
+    where: { id },
+    data,
   });
-
-  return token;
 };
 
-// Change Password
-const changePassword = async (userId, newPassword) => {
-  const hashedPassword = await bcrypt.hash(newPassword, 10);
-  const user = await prisma.user.update({
-    where: { id: userId },
-    data: { password: hashedPassword },
+const deleteUser = async (id) => {
+  return await prisma.user.delete({
+    where: { id },
   });
-  return user;
+};
+
+const authenticateUser = async (cpf, password) => {
+  const user = await prisma.user.findUnique({
+    where: { cpf },
+  });
+  if (user && (await bcrypt.compare(password, user.password))) {
+    return user;
+  }
+  return null;
 };
 
 module.exports = {
   createUser,
-  login,
-  changePassword,
+  getUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+  authenticateUser,
 };
