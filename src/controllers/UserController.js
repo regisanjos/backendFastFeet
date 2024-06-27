@@ -1,3 +1,4 @@
+const { changePassword } = require('../BLL/userBLL');
 const {
   createUser,
   getUsers,
@@ -35,10 +36,19 @@ const remove = async (req, res) => {
   res.status(204).send();
 };
 
+const updatePassword = async (req, res) => {
+const {id} = req.parms;
+const { newPassword } = req.body
+
+const user = await changePassword(id, newPassword);
+res.json(user);
+};
+
 module.exports = {
   create,
   getAll,
   getById,
   update,
   remove,
+  updatePassword
 };

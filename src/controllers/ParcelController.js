@@ -9,8 +9,10 @@ const {
   markParcelAsReturned,
   withdrawParcel,
 } = require('../BLL/parcelBLL');
-
+const { getParcelsNearby } = require('../Bll/parcelBLL');
+const { getParcelByUser } = require('../Bll/ParcelBLL');
 const create = async (req, res) => {
+
   const parcel = await createParcel(req.body);
   res.status(201).json(parcel);
 };
@@ -63,6 +65,21 @@ const markAsReturned = async (req, res) => {
   res.json(parcel);
 };
 
+const ListNearby = async (req, res) =>{
+  const location = req.query.location;
+  const parcels = await getParcelsNearby(location);
+  res.json(parcels);
+};
+
+const listByUser = async (req, res) =>{
+  const userId = req.query.location;
+  const parcels = await getParcelByUser(userId);
+  res.json(parcels);
+
+}
+
+
+
 module.exports = {
   create,
   getAll,
@@ -73,4 +90,6 @@ module.exports = {
   withdrawParcel,
   markAsDelivered,
   markAsReturned,
+  ListNearby,
+  listByUser
 };

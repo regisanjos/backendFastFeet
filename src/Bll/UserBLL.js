@@ -1,3 +1,5 @@
+const { updateUserPassword} = require ('../DAO/UserDAO')
+const { update } = require('../controllers/ParcelController');
 const { prisma } = require('../prismaClient');
 const bcrypt = require('bcryptjs');
 
@@ -46,6 +48,10 @@ const authenticateUser = async (cpf, password) => {
   return null;
 };
 
+const changePassword = async(id, newPassword) =>{
+  return await updateUserPassword(id, newPassword);
+};
+
 module.exports = {
   createUser,
   getUsers,
@@ -53,4 +59,5 @@ module.exports = {
   updateUser,
   deleteUser,
   authenticateUser,
+  changePassword
 };

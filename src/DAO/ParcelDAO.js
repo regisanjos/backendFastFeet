@@ -57,6 +57,31 @@ const markParcelAsReturned = async (id, userId) => {
   });
 };
 
+  const getParcelsNearby = async (location) =>{
+    
+    //logica 
+    
+    
+    
+    return await prisma.parcel.findMany({
+      where:{
+        location:{
+          contains: location,
+        },
+      },
+    });
+  };
+
+  const getParcelByUser = async (userId) => {
+    return await prisma.parcel.findMany({
+      where:{
+        responsibleId: userId,
+      },
+    });
+  };
+
+
+
 module.exports = {
   createParcel,
   getAllParcels,
@@ -67,4 +92,6 @@ module.exports = {
   withdrawParcel,
   markParcelAsDelivered,
   markParcelAsReturned,
+  getParcelsNearby,
+  getParcelByUser
 };
