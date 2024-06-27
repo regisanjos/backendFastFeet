@@ -1,40 +1,38 @@
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 
-// Create Deliveryman
-const createDeliveryman = async (deliverymanData) => {
-  const deliveryman = await prisma.deliveryman.create({
-    data: deliverymanData,
+
+
+const createDeliveryman = async (data) => {
+  return await prisma.deliveryman.create({
+        data,
   });
-  return deliveryman;
-};
+  };
 
-// Get All Deliverymen
+
 const getDeliverymen = async () => {
-  const deliverymen = await prisma.deliveryman.findMany();
-  return deliverymen;
+   return await prisma.deliveryman.findMany();
+  
 };
 
-// Get Deliveryman by ID
+
 const getDeliverymanById = async (id) => {
-  const deliveryman = await prisma.deliveryman.findUnique({
+  return await prisma.deliveryman.findUnique({
     where: { id },
   });
-  return deliveryman;
-};
+  };
 
-// Update Deliveryman
+
 const updateDeliveryman = async (id, deliverymanData) => {
-  const deliveryman = await prisma.deliveryman.update({
+  return await prisma.deliveryman.update({
     where: { id },
-    data: deliverymanData,
+    data,
   });
   return deliveryman;
 };
 
-// Delete Deliveryman
+
 const deleteDeliveryman = async (id) => {
-  await prisma.deliveryman.delete({
+  return await prisma.deliveryman.delete({
     where: { id },
   });
 };
