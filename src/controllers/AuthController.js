@@ -1,38 +1,22 @@
-const { prisma } = require('../prismaClient');
+const { authenticateUser } = require('../BLL/userBLL');
 
-const createDeliveryman = async (data) => {
-  return await prisma.deliveryman.create({
-    data,
-  });
+const login = async (req, res) => {
+  const { cpf, password } = req.body;
+  const user = await authenticateUser(cpf, password);
+  if (user) {
+    // Gerar token JWT (exemplo básico, considere usar uma biblioteca como jsonwebtoken)
+    const token = generateToken(user);
+    res.json({ token });
+  } else {
+    res.status(401).json({ message: 'CPF ou senha incorretos' });
+  }
 };
 
-const getAllDeliverymen = async () => {
-  return await prisma.deliveryman.findMany();
-};
-
-const getDeliverymanById = async (id) => {
-  return await prisma.deliveryman.findUnique({
-    where: { id },
-  });
-};
-
-const updateDeliveryman = async (id, data) => {
-  return await prisma.deliveryman.update({
-    where: { id },
-    data,
-  });
-};
-
-const deleteDeliveryman = async (id) => {
-  return await prisma.deliveryman.delete({
-    where: { id },
-  });
+const generateToken = (user) => {
+  // Implementar geração de token JWT
+  return 'token-placeholder';
 };
 
 module.exports = {
-  createDeliveryman,
-  getAllDeliverymen,
-  getDeliverymanById,
-  updateDeliveryman,
-  deleteDeliveryman,
+  login,
 };
