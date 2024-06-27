@@ -1,55 +1,38 @@
-const express = require('express');
-const router = express.Router();
-const deliverymanService = require('../BLL/deliverymanService');
+const { prisma } = require('../prismaClient');
 
-// Create Deliveryman
-router.post('/', async (req, res) => {
-  try {
-    const deliveryman = await deliverymanService.createDeliveryman(req.body);
-    res.status(201).json(deliveryman);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
+const createDeliveryman = async (data) => {
+  return await prisma.deliveryman.create({
+    data,
+  });
+};
 
-// Get All Deliverymen
-router.get('/', async (req, res) => {
-  try {
-    const deliverymen = await deliverymanService.getDeliverymen();
-    res.status(200).json(deliverymen);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
+const getAllDeliverymen = async () => {
+  return await prisma.deliveryman.findMany();
+};
 
-// Get Deliveryman by ID
-router.get('/:id', async (req, res) => {
-  try {
-    const deliveryman = await deliverymanService.getDeliverymanById(req.params.id);
-    res.status(200).json(deliveryman);
-  } catch (error) {
-    res.status(404).json({ error: error.message });
-  }
-});
+const getDeliverymanById = async (id) => {
+  return await prisma.deliveryman.findUnique({
+    where: { id },
+  });
+};
 
-// Update Deliveryman
-router.put('/:id', async (req, res) => {
-  try {
-    const deliveryman = await deliverymanService.updateDeliveryman(req.params.id, req.body);
-    res.status(200).json(deliveryman);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
+const updateDeliveryman = async (id, data) => {
+  return await prisma.deliveryman.update({
+    where: { id },
+    data,
+  });
+};
 
-// Delete Deliveryman
-router.delete('/:id', async (req, res) => {
-  try {
-    await deliverymanService.deleteDeliveryman(req.params.id);
-    res.status(204).send();
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
+const deleteDeliveryman = async (id) => {
+  return await prisma.deliveryman.delete({
+    where: { id },
+  });
+};
 
-module.exports = router;
+module.exports = {
+  createDeliveryman,
+  getAllDeliverymen,
+  getDeliverymanById,
+  updateDeliveryman,
+  deleteDeliveryman,
+};
