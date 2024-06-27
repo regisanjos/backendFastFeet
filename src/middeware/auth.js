@@ -1,25 +1,25 @@
 const jwt = require('jsonwebtoken');
 
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+const isAuthenticated = (req, res, next) => {
+  const token = req.headers['authorization'];
+  if (!token) return res.status(401).json({ message: 'Token não fornecido' });
 
-  if (token == null) return res.sendStatus(401);
+  jwt.verify(token, 'your-secret-key', (err, decoded) => {
+    if (err) return res.status(401).json({ message: 'Token inválido' });
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
+    req.user = decoded;
     next();
   });
 };
 
-const authorizeRole = (role) => {
-  return (req, res, next) => {
-    if (req.user.role !== role) {
-      return res.status(403).json({ message: 'Forbidden' });
-    }
-    next();
-  };
+const isAdmin = (req, res, next) => {
+  if (req.user.role !== 'ADMIN') {
+    return res.status(403).json({ message: 'Acesso negado' });
+  }
+  next();
 };
 
-module.exports = { authenticateToken, authorizeRole };
+module.exports = {
+  isAuthenticated,
+  isAdmin,
+};
