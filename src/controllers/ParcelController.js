@@ -9,8 +9,8 @@ const {
   markParcelAsReturned,
   withdrawParcel,
 } = require('../BLL/parcelBLL');
-const { getParcelsNearby } = require('../Bll/parcelBLL');
-const { getParcelByUser } = require('../Bll/ParcelBLL');
+const { getParcelsNearby } = require('../Bll/ParcelsBLL');
+const { getParcelsByUser } = require('../Bll/ParceslBLL');
 const create = async (req, res) => {
 
   const parcel = await createParcel(req.body);
