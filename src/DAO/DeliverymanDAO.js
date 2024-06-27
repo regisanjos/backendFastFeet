@@ -1,44 +1,38 @@
-const {
-    createDeliveryman,
-    getDeliverymen,
-    getDeliverymanById,
-    updateDeliveryman,
-    deleteDeliveryman,
-} = require('../BLL/deliverymanBLL');
+const { prisma } = require('../prismaClient');
 
-const create = async (req, res) => {
-    const deliveryman = await createDeliveryman(req.body);
-    res.status(201).json(deliveryman);
+const createDeliveryman = async (data) => {
+  return await prisma.deliveryman.create({
+    data,
+  });
 };
 
-const getAll = async (req, res) => {
-    const deliverymen = await getDeliverymen();
-    res.json(deliverymen);
+const getAllDeliverymen = async () => {
+  return await prisma.deliveryman.findMany();
 };
 
-const getById = async (req, res) => {
-    const deliveryman = await getDeliverymanById(req.params.id);
-    if (deliveryman) {
-        res.json(deliveryman);
-    } else {
-        res.status(404).json({ message: 'Deliveryman not found' });
-    }
+const getDeliverymanById = async (id) => {
+  return await prisma.deliveryman.findUnique({
+    where: { id },
+  });
 };
 
-const update = async (req, res) => {
-    const deliveryman = await updateDeliveryman(req.params.id, req.body);
-    res.json(deliveryman);
+const updateDeliveryman = async (id, data) => {
+  return await prisma.deliveryman.update({
+    where: { id },
+    data,
+  });
 };
 
-const remove = async (req, res) => {
-    await deleteDeliveryman(req.params.id);
-    res.status(204).send();
+const deleteDeliveryman = async (id) => {
+  return await prisma.deliveryman.delete({
+    where: { id },
+  });
 };
 
 module.exports = {
-    create,
-    getAll,
-    getById,
-    update,
-    remove,
+  createDeliveryman,
+  getAllDeliverymen,
+  getDeliverymanById,
+  updateDeliveryman,
+  deleteDeliveryman,
 };
